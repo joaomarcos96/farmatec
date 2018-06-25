@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="_template.xhtml"> 
+
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+			<center>
+				<h:form id="formCliente">
+					<p:messages id="mensagens" />
+					
+					<p:fieldset legend="Novo Cliente - Pessoa Jurídica" style="width:40%; margin:0px auto;">
+						<p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-widget-header">
+							<p:outputLabel value="Nome" for="nome" />
+							<p:inputText id="nome" value="#{clientePJController.clientePJ.nome}" required="true" requiredMessage="Nome Obrigatório." validatorMessage="Nome precisa ter no mínimo 3 caracteres.">
+								<f:validateLength minimum="3" />
+							</p:inputText>
+							
+							<p:outputLabel value="CNPJ" for="cnpj" />
+							<p:inputMask id="cnpj" mask="99.999.999/9999-99" value="#{clientePJController.clientePJ.cnpj}" required="true" requiredMessage="CNPJ Obrigatório." validatorMessage="CNPJ Inválido." />
+							
+							<p:outputLabel value="Razão Social" for="razao" />
+							<p:inputText id="razao" value="#{clientePJController.clientePJ.razao_social}" />
+							
+							<p:outputLabel value="Inscrição Estadual" for="insc" />
+							<p:inputText id="insc" value="#{clientePJController.clientePJ.inscricao_est}" />
+							
+							<p:outputLabel value="Cartão" for="cartao" />
+							<p:inputMask id="cartao" mask="9999999999" value="#{clientePJController.clientePJ.cartao}" required="true" requiredMessage="Cartão Obrigatório." />
+							
+							<p:outputLabel value="Endereço" for="endereco" />
+							<p:inputText id="endereco" value="#{clientePJController.clientePJ.endereco}" required="true" requiredMessage="Endereço Obrigatório." validatorMessage="Endereço deve conter no mínimo 10 caracteres.">
+								<f:validateLength minimum="10" />
+							</p:inputText>
+							
+							<p:outputLabel value="Telefone" for="telefone" />
+							<p:inputMask id="telefone" mask="(99) 9 9999-9999" value="#{clientePJController.clientePJ.telefone}" required="true" requiredMessage="Telefone Obrigatório." />
+							
+							<p:outputLabel value="Email" for="email" />
+							<p:inputText id="email" value="#{clientePJController.clientePJ.email}" required="true" requiredMessage="Email Obrigatório." validatorMessage="Email inválido.">
+								<f:validateRegex pattern=".+@.+" />
+							</p:inputText>
+							
+							<p:outputLabel value="Login" for="login" />
+							<p:inputText id="login" value="#{clientePJController.usuario.login}" required="true" requiredMessage="Login Obrigatório." validatorMessage="Login deve ter no mínimo 3 caracteres.">
+								<f:validateLength minimum="3" />
+							</p:inputText>
+							
+							<p:outputLabel value="Senha" for="senha" />
+							<p:password id="senha" value="#{clientePJController.usuario.senha}" feedback="true" promptLabel="Entre com uma senha" weakLabel="Fraco" goodLabel="Bom" strongLabel="Forte" required="true" requiredMessage="Senha Obrigatória." validatorMessage="Senha deve conter entre 6 e 20 caracteres.">
+								<f:validateLength minimum="6" maximum="20" />
+							</p:password>
+							
+							<center>
+								<p:commandButton value="Gravar" action="#{clientePJController.gravar(clientePJController.clientePJ)}" process="@form" update="@form :formTabelaClientes:tabelaClientes" />
+							</center>
+						
+						</p:panelGrid>
+					</p:fieldset>	
+				</h:form>
+			</center>
+		</div>
+		
+		<br />
+		<p:separator />
+		<br />
+		
+		<h:form id="formTabelaClientes">
+			<center>
+				<p:fieldset legend="Lista de Clientes - Pessoa Física">
+					<p:dataTable id="tabelaClientes" value="#{clientePJController.todosClientesPJ}" var="varCliente" rows="10" paginator="true" reflow="true" emptyMessage="Nenhum cliente pessoa jurídica encontrado.">
+						<p:column headerText="Nome" filterBy="#{varCliente.nome}" filterMatchMode="contains">
+							<p:outputLabel value="#{varCliente.nome}" />			
+						</p:column>
+						
+						<p:column headerText="CNPJ">
+							<p:outputLabel value="#{varCliente.cnpj}" />			
+						</p:column>
+						
+						<p:column headerText="Razão Social">
+							<p:outputLabel value="#{varCliente.razao_social}" />			
+						</p:column>
+						
+						<p:column headerText="Inscrição Estadual">
+							<p:outputLabel value="#{varCliente.inscricao_est}" />			
+						</p:column>
+						
+						<p:column headerText="Cartão">
+							<p:outputLabel value="#{varCliente.cartao}" />			
+						</p:column>
+						
+						<p:column headerText="Endereço">
+							<p:outputLabel value="#{varCliente.endereco}" />			
+						</p:column>
+						
+						<p:column headerText="Telefone">
+							<p:outputLabel value="#{varCliente.telefone}" />			
+						</p:column>
+						
+						<p:column headerText="Email">
+							<p:outputLabel value="#{varCliente.email}" />			
+						</p:column>
+						
+						<p:column headerText="Login">
+							<p:outputLabel value="#{varCliente.usuario.login}" />			
+						</p:column>
+						
+						<p:column headerText="Atualizar">
+							<div align="center">
+								<p:commandButton style="display:inline-block; width:40px; height:30px" icon="fa fa-fw fa-edit" action="#{clientePJController.carregar(varCliente)}" process="@this" update=":formCliente" />
+							</div>			
+						</p:column>
+						
+						<p:column headerText="Remover">
+							<div align="center">
+								<p:commandButton style="display:inline-block; width:40px; height:30px" icon="fa fa-fw fa-remove" action="#{clientePJController.remover(varCliente)}" process="@form" update="@form :formTabelaClientes:tabelaClientes :formCliente" />
+							</div>				
+						</p:column>
+				
+					</p:dataTable>
+				</p:fieldset>
+			</center>
+		</h:form>
+	</ui:define>
+</ui:composition>
+
+</html>

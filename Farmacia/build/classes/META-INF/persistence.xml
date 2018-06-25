@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<persistence 
+	xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence    
+    					http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+    version="2.0">
+
+    <!-- unidade de persistencia -->
+    <persistence-unit name="farmacia">
+
+        <!-- Implementação do JPA, no nosso caso Hibernate -->
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+
+        <!-- Aqui são listadas todas as entidades -->
+        <class>farmacia.modelo.Cargo</class>
+        <class>farmacia.modelo.Cliente</class> 
+        <class>farmacia.modelo.ClientePF</class>
+        <class>farmacia.modelo.ClientePJ</class>
+        <class>farmacia.modelo.Fornecedor</class>
+        <class>farmacia.modelo.Funcionalidade</class>
+		<class>farmacia.modelo.Funcionario</class>
+		<class>farmacia.modelo.Grupo</class>
+		<class>farmacia.modelo.Produto</class>
+		<class>farmacia.modelo.Usuario</class>
+		<class>farmacia.modelo.Venda</class>
+        
+        <properties>    
+            <!-- Propriedades JDBC -->
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />				<!-- Driver -->
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/bdteste" />	<!-- Banco -->
+            <property name="javax.persistence.jdbc.user" value="root" />								<!-- Usuário -->
+            <property name="javax.persistence.jdbc.password" value="" />							<!-- Senha -->
+
+            <!-- Configurações específicas do Hibernate -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+            <property name="hibernate.hbm2ddl.auto" value="update" /> 	<!-- Criação automatizada -->
+            <property name="hibernate.show_sql" value="true" />			<!-- Mostra SQL -->
+            <property name="hibernate.format_sql" value="true" />		<!-- SQL formatado -->
+        </properties>
+    </persistence-unit>
+</persistence>

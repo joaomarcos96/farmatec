@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="_template.xhtml"> 
+
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+			<center>
+				<h:form id="formFuncionario">
+					<p:messages id="mensagens" />
+					
+					<p:fieldset legend="Novo Funcionário" style="width:45%; margin:0px auto;">
+						<p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-9" layout="grid" styleClass="ui-widget-header">
+							<p:outputLabel value="Nome" for="nome" />
+							<p:inputText id="nome" value="#{funcionarioController.funcionario.nome}" required="true" requiredMessage="Nome Obrigatório" validatorMessage="Nome deve conter no mínimo 10 caracteres.">
+								<f:validateLength minimum="10" />
+							</p:inputText>
+							
+							<p:outputLabel value="Genero" for="genero" />
+							<p:selectOneRadio id="genero" value="#{funcionarioController.funcionario.genero}"  required="true" requiredMessage="Gênero Obrigatório.">
+								<f:selectItems value="#{funcionarioController.generos}" var="varGenero" itemLabel="#{varGenero}" itemValue="#{varGenero}" />
+							</p:selectOneRadio>
+							
+							<p:outputLabel value="CPF" for="cpf" />
+							<p:inputMask mask="99.999.999-99" id="cpf" value="#{funcionarioController.funcionario.cpf}" required="true" requiredMessage="CPF Obrigatório." />
+							
+							<p:outputLabel value="Cargo" for="cargo" />
+							<h:panelGrid columns="2">
+								<p:selectOneMenu id="cargo" value="#{funcionarioController.id_cargo}" required="true" requiredMessage="Cargo Obrigatório.">
+									<f:selectItem itemLabel="Selecione um cargo" noSelectionOption="true" />
+									<f:selectItems value="#{funcionarioController.todosCargos}" var="varCargo" itemLabel="#{varCargo.nome}" itemValue="#{varCargo.id}" />
+								</p:selectOneMenu>
+								<p:commandLink value="Cadastrar novo cargo" action="#{cargoController.formCargo}" immediate="true" />
+							</h:panelGrid>
+							
+							<p:outputLabel value="Telefone" for="telefone" />
+							<p:inputMask id="telefone" mask="(99) 9 9999-9999" value="#{funcionarioController.funcionario.telefone}" required="true" requiredMessage="Telefone Obrigatório." />
+							
+							<p:outputLabel value="Email" for="email" />
+							<p:inputText id="email" value="#{funcionarioController.funcionario.email}" required="true" requiredMessage="Email Obrigatório.">
+								<f:validateRegex pattern=".+@.+" />
+							</p:inputText>
+							
+							<p:outputLabel value="Endereço" for="endereco" />
+							<p:inputText id="endereco" value="#{funcionarioController.funcionario.endereco}" required="true" requiredMessage="Endereço Obrigatório." validatorMessage="Endereço deve conter no mínimo 10 caracteres.">
+								<f:validateLength minimum="10" />
+							</p:inputText>
+							
+							<p:outputLabel value="Login" for="login" />
+							<p:inputText id="login" value="#{funcionarioController.usuario.login}" required="true" requiredMessage="Login Obrigatório." validatorMessage="Login deve ter no mínimo 3 caracteres.">
+								<f:validateLength minimum="3" />
+							</p:inputText>
+							
+							<p:outputLabel value="Senha" for="senha" />
+							<p:password id="senha" value="#{funcionarioController.usuario.senha}" feedback="true" promptLabel="Entre com uma senha" weakLabel="Fraco" goodLabel="Bom" strongLabel="Forte" required="true" requiredMessage="Senha Obrigatória." validatorMessage="Senha deve conter entre 6 e 20 caracteres.">
+								<f:validateLength minimum="6" maximum="20" />
+							</p:password>
+							
+							<p:outputLabel value="Tipo de usuário" for="tipo" rendered="#{usuarioLogado.grupo.id == 2}"/>
+							<p:selectOneRadio rendered="#{usuarioLogado.grupo.id == 2}" id="tipo" value="#{funcionarioController.id_grupo}"  required="true" requiredMessage="Tipo de Usuário Obrigatório.">
+								<f:selectItems value="#{funcionarioController.grupos}" var="varGrupo" itemLabel="#{varGrupo.nome}" itemValue="#{varGrupo.id}"/>
+							</p:selectOneRadio>
+							
+							<center>
+								<p:commandButton value="Gravar" action="#{funcionarioController.gravar}" process="@form" update="@form :formTabelaFuncionarios:tabelaFuncionarios" />
+							</center>
+							
+						</p:panelGrid>
+					</p:fieldset>	
+				</h:form>
+			</center>
+		</div>
+	
+		<br />
+		<p:separator />
+		<br />
+	
+		<h:form id="formTabelaFuncionarios">
+			<center>
+				<p:fieldset legend="Lista de Funcionários">
+					<p:dataTable id="tabelaFuncionarios" value="#{funcionarioController.todosFuncionarios}" var="varFuncionario" paginator="true" reflow="true" emptyMessage="Nenhum funcionário encontrado.">
+						<p:column headerText="Nome" filterBy="#{varFuncionario.nome}" filterMatchMode="contains">
+							<p:outputLabel value="#{varFuncionario.nome}" />			
+						</p:column>
+						
+						<p:column headerText="CPF">
+							<p:outputLabel value="#{varFuncionario.cpf}" />			
+						</p:column>
+						
+						<p:column headerText="Gênero">
+							<p:outputLabel value="#{varFuncionario.genero}" />			
+						</p:column>
+						
+						<p:column headerText="Cargo">
+							<p:outputLabel value="#{varFuncionario.cargo.nome}" />			
+						</p:column>
+						
+						<p:column headerText="Telefone">
+							<p:outputLabel value="#{varFuncionario.telefone}" />			
+						</p:column>
+						
+						<p:column headerText="Email">
+							<p:outputLabel value="#{varFuncionario.email}" />			
+						</p:column>
+						
+						<p:column headerText="Endereço">
+							<p:outputLabel value="#{varFuncionario.endereco}" />			
+						</p:column>
+						
+						<p:column headerText="Login">
+							<p:outputLabel value="#{varFuncionario.usuario.login}" />			
+						</p:column>
+						
+						<p:column headerText="Tipo de usuário">
+							<p:outputLabel value="#{varFuncionario.usuario.grupo.nome}" />			
+						</p:column>
+						
+						<p:column headerText="Atualizar">
+							<div align="center">
+								<p:commandButton style="display:inline-block; width:40px; height:30px" icon="fa fa-fw fa-edit" action="#{funcionarioController.carregar(varFuncionario)}" process="@this" update=":formFuncionario" />
+							</div>			
+						</p:column>
+						
+						<p:column headerText="Remover">
+							<div align="center">
+								<p:commandButton style="display:inline-block; width:40px; height:30px" icon="fa fa-fw fa-remove" action="#{funcionarioController.remover(varFuncionario)}" process="@form" update="@form :formTabelaFuncionarios:tabelaFuncionarios :formFuncionario" />
+							</div>				
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</center>
+		</h:form>
+	</ui:define>
+</ui:composition>
+
+</html>

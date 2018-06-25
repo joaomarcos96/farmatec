@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="_template.xhtml">
+
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+			<center>
+				<h:form id="formProdutoFornecedor">	
+					<p:messages id="mensagens" />
+					
+					<p:fieldset legend="Nova Compra" style="width:50%; margin:0px auto;">
+						<p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-9" layout="grid" styleClass="ui-widget-header">
+							<p:outputLabel value="Produto" for="produto" />
+							<h:panelGrid columns="2">
+								<p:selectOneMenu id="produto" value="#{produtoFornecedorController.id_prod}" required="true" requiredMessage="Produto Obrigatório.">
+									<f:selectItem itemLabel="Selecione um produto" noSelectionOption="true" />
+									<f:selectItems value="#{produtoFornecedorController.todosProdutos}" var="varProd" itemLabel="#{varProd.nome}" itemValue="#{varProd.id}" />
+								</p:selectOneMenu>
+								<p:commandLink value="Cadastrar novo produto" action="#{produtoController.formProduto}" immediate="true" />
+							</h:panelGrid>
+							
+							<p:outputLabel value="Fornecedor" for="fornecedor" />
+							<h:panelGrid columns="2">
+								<p:selectOneMenu id="fornecedor" value="#{produtoFornecedorController.id_forn}" required="true" requiredMessage="Fornecedor Obrigatório.">
+									<f:selectItem itemLabel="Selecione um fornecedor" noSelectionOption="true" />
+									<f:selectItems value="#{produtoFornecedorController.todosFornecedores}" var="varForn" itemLabel="#{varForn.nome}" itemValue="#{varForn.id}" />
+								</p:selectOneMenu>
+								<p:commandLink value="Cadastrar novo fornecedor" action="#{fornecedorController.formFornecedor}" immediate="true" />
+							</h:panelGrid>
+			
+							<p:outputLabel value="Quantidade" for="qtd" required="true" requiredMessage="Quantidade Obrigatória." validatorMessage="Quantidade Inválida." />
+							<p:inputText id="qtd" value="#{produtoFornecedorController.prod_fornecedor.quantidade}">
+								<f:validateLongRange minimum="1" />
+							</p:inputText>
+		
+							<p:outputLabel value="Valor" for="valor" required="true" requiredMessage="Valor Obrigatório." validatorMessage="Valor Inválido" />
+							<p:inputText id="valor" value="#{produtoFornecedorController.prod_fornecedor.preco}">
+								<f:validateDoubleRange minimum="0.05" />
+							</p:inputText>
+							
+							<p:outputLabel value="Data de Compra" for="dt" />
+							<p:calendar id="dt" value="#{produtoFornecedorController.prod_fornecedor.data_compra.time}" showOn="button" pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" required="true" requiredMessage="Data de Compra Obrigatória." />
+							
+							<center>
+								<p:commandButton value="Gravar" action="#{produtoFornecedorController.gravar}" process="@form" update="@form :formTabelaProdutoFornecedor:tabelaProdutoFornecedor" />
+							</center>
+						</p:panelGrid>
+					</p:fieldset>
+				</h:form>
+			</center>
+		</div>
+		
+		<br />
+		<p:separator />
+		<br />
+
+		<h:form id="formTabelaProdutoFornecedor">
+			<center>
+				<p:fieldset legend="Lista de Compras">
+					<p:dataTable id="tabelaProdutoFornecedor" value="#{produtoFornecedorController.todosProdutoFornecedor}" var="prodforn" rows="10" paginator="true" reflow="true" emptyMessage="Nenhuma compra encontrada.">
+						<p:column headerText="Produto" filterBy="#{prodforn.produto.nome}" filterMatchMode="contains">
+							<p:outputLabel value="#{prodforn.produto.nome}" />
+						</p:column>
+			
+						<p:column headerText="Fornecedor" filterBy="#{prodforn.fornecedor.nome}" filterMatchMode="contains">
+							<p:outputLabel value="#{prodforn.fornecedor.nome}" />
+						</p:column>
+						
+						<p:column headerText="Quantidade">
+							<p:outputLabel value="#{prodforn.quantidade}" />
+						</p:column>
+			
+						<p:column headerText="Valor">
+							<p:outputLabel value="#{prodforn.preco}">
+								<f:convertNumber type="currency" />
+							</p:outputLabel>
+						</p:column>
+						
+						<p:column headerText="Data de Compra">
+							<p:outputLabel value="#{prodforn.data_compra.time}">
+								<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+							</p:outputLabel>
+						</p:column>
+			
+						<p:column headerText="Atualizar">
+							<div align="center">
+								<p:commandButton style="display:inline-block; width:40px; height:30px" icon="fa fa-fw fa-edit" action="#{produtoFornecedorController.carregar(prodforn)}" process="@this" update=":formProdutoFornecedor" />
+							</div>
+						</p:column>
+						
+						<p:column headerText="Remover">
+							<div align="center">
+								<p:commandButton style="display:inline-block; width:40px; height:30px" icon="fa fa-fw fa-remove" action="#{produtoFornecedorController.remover(prodforn)}" process="@form" update="@form :formTabelaProdutoFornecedor:tabelaProdutoFornecedor :formProdutoFornecedor" />
+							</div>				
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</center>
+		</h:form>
+	</ui:define>
+</ui:composition>
+
+</html>

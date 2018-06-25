@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="_template.xhtml"> 
+
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+				<center>
+					<h:form id="formCliente">
+						<p:messages id="mensagens" />
+						
+						<p:fieldset legend="Novo Cliente - Pessoa Física" style="width:40%; margin:0px auto;">
+							<p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-widget-header">
+								<p:outputLabel value="Nome" for="nome" />
+								<p:inputText id="nome" value="#{clientePFController.clientePF.nome}" required="true" requiredMessage="Nome Obrigatório." validatorMessage="Nome precisa ter no mínimo 10 caracteres.">
+									<f:validateLength minimum="10" />
+								</p:inputText>
+								
+								<p:outputLabel value="Genero" for="genero" />
+								<p:selectOneRadio id="genero" value="#{clientePFController.clientePF.genero}"  required="true" requiredMessage="Gênero Obrigatório.">
+									<f:selectItems value="#{clientePFController.generos}" var="varGenero" itemLabel="#{varGenero}" itemValue="#{varGenero}" />
+								</p:selectOneRadio>
+								
+								<p:outputLabel value="CPF" for="cpf" />
+								<p:inputMask id="cpf" mask="99.999.999-99" value="#{clientePFController.clientePF.cpf}" required="true" requiredMessage="CPF Obrigatório." validatorMessage="CPF Inválido." />
+								
+								<p:outputLabel value="Cartão" for="cartao" />
+								<p:inputMask id="cartao" mask="9999999999" value="#{clientePFController.clientePF.cartao}" required="true" requiredMessage="Cartão Obrigatório." />
+								
+								<p:outputLabel value="Endereço" for="endereco" />
+								<p:inputText id="endereco" value="#{clientePFController.clientePF.endereco}" required="true" requiredMessage="Endereço Obrigatório." validatorMessage="Endereço deve conter no mínimo 10 caracteres.">
+									<f:validateLength minimum="10" />
+								</p:inputText>
+								
+								<p:outputLabel value="Telefone" for="telefone" />
+								<p:inputMask id="telefone" mask="(99) 9 9999-9999" value="#{clientePFController.clientePF.telefone}" required="true" requiredMessage="Telefone Obrigatório." />
+								
+								<p:outputLabel value="Email" for="email" />
+								<p:inputText id="email" value="#{clientePFController.clientePF.email}" required="true" requiredMessage="Email Obrigatório." validatorMessage="Email inválido.">
+									<f:validateRegex pattern=".+@.+" />
+								</p:inputText>
+								
+								<p:outputLabel value="Login" for="login" />
+								<p:inputText id="login" value="#{clientePFController.usuario.login}" required="true" requiredMessage="Login Obrigatório." validatorMessage="Login deve ter no mínimo 3 caracteres.">
+									<f:validateLength minimum="3" />
+								</p:inputText>
+								
+								<p:outputLabel value="Senha" for="senha" />
+								<p:password id="senha" value="#{clientePFController.usuario.senha}" feedback="true" promptLabel="Entre com uma senha" weakLabel="Fraco" goodLabel="Bom" strongLabel="Forte" required="true" requiredMessage="Senha Obrigatória." validatorMessage="Senha deve conter entre 6 e 20 caracteres.">
+									<f:validateLength minimum="6" maximum="20" />
+								</p:password>
+								
+								<center>
+									<p:commandButton value="Gravar" action="#{clientePFController.gravar(clientePFController.clientePF)}" process="@form" update="@form :formTabelaClientes:tabelaClientes" />
+								</center>
+							
+							</p:panelGrid>
+						</p:fieldset>	
+					</h:form>
+				</center>
+			</div>
+			
+			<br />
+			<p:separator />
+			<br />
+		
+			<h:form id="formTabelaClientes">
+				<center>
+					<p:fieldset legend="Lista de Clientes - Pessoa Física">
+						<p:dataTable id="tabelaClientes" value="#{clientePFController.todosClientesPF}" var="varCliente" rows="10" paginator="true" reflow="true" emptyMessage="Nenhum cliente pessoa física encontrado.">
+							<p:column headerText="Nome" filterBy="#{varCliente.nome}" filterMatchMode="contains">
+								<p:outputLabel value="#{varCliente.nome}" />			
+							</p:column>
+							
+							<p:column headerText="CPF">
+								<p:outputLabel value="#{varCliente.cpf}" />			
+							</p:column>
+							
+							<p:column headerText="Cartão">
+								<p:outputLabel value="#{varCliente.cartao}" />			
+							</p:column>
+							
+							<p:column headerText="Endereço">
+								<p:outputLabel value="#{varCliente.endereco}" />			
+							</p:column>
+							
+							<p:column headerText="Telefone">
+								<p:outputLabel value="#{varCliente.telefone}" />			
+							</p:column>
+							
+							<p:column headerText="Email">
+								<p:outputLabel value="#{varCliente.email}" />			
+							</p:column>
+							
+							<p:column headerText="Login">
+								<p:outputLabel value="#{varCliente.usuario.login}" />			
+							</p:column>
+							
+							<p:column headerText="Atualizar">
+								<div align="center">
+									<p:commandButton style="display:inline-block; width:40px; height:30px" icon="fa fa-fw fa-edit" action="#{clientePFController.carregar(varCliente)}" process="@this" update=":formCliente" />
+								</div>			
+							</p:column>
+							
+							<p:column headerText="Remover">
+								<div align="center">
+									<p:commandButton style="display:inline-block; width:40px; height:30px" icon="fa fa-fw fa-remove" action="#{clientePFController.remover(varCliente)}" process="@form" update="@form :formTabelaClientes:tabelaClientes :formCliente" />
+								</div>				
+							</p:column>
+						</p:dataTable>
+					</p:fieldset>
+				</center>
+			</h:form>
+	</ui:define>
+</ui:composition>
+
+</html>

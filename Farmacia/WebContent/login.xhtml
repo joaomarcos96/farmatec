@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="_template.xhtml">
+
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+			<center>
+				<h:form id="formLogin">
+					<p:messages />
+					<p:fieldset legend="Autenticação" style="width:40%; margin:0px auto;">
+						<p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-widget-header">
+							<p:outputLabel value="Login" for="login" />
+							<p:inputText id="login" value="#{loginController.usuario.login}" />
+		
+							<p:outputLabel value="Senha" for="senha" />
+							<p:password id="senha" value="#{loginController.usuario.senha}" />
+							
+							<p:commandButton value="Acessar" action="#{loginController.efetuarLogin}" process="@form" update="@form" />
+							
+							<p:commandButton value="Novo Cadastro" action="novo_cadastro?faces-redirect=true" />
+							
+						</p:panelGrid>
+					</p:fieldset>
+				</h:form>
+			</center>
+		</div>
+	</ui:define>
+
+
+</ui:composition>
+
+</html>

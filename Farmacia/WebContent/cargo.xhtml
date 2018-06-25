@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="_template.xhtml"> 
+
+	<ui:define name="titulo">
+		
+	</ui:define>
+	
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+		
+			<center>
+				<h:form id="formCargo">
+					
+					<p:messages id="mensages" />
+					
+					<p:fieldset legend="Novo Cargo" style="width:40%; margin:0px auto;">
+						<p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-widget-header">
+	
+							<p:outputLabel value="Nome do cargo" for="nome" />
+							<p:inputText id="nome" value="#{cargoController.cargo.nome}" required="true" requiredMessage="Nome Obrigatório." validatorMessage="Nome do cargo precisa ter no mínimo 3 caracteres.">
+								<f:validateLength minimum="3" />
+							</p:inputText>
+							
+							<p:outputLabel value="Descrição" for="descricao" />
+							<p:inputText id="descricao" value="#{cargoController.cargo.descricao}" />
+							
+							<p:outputLabel value="Salário" for="salario" />
+							<p:inputText id="salario" value="#{cargoController.cargo.salario}" required="true" requiredMessage="Salário Obrigatório." validatorMessage="Salário deve ser maior que 0.">
+								<f:validateLongRange minimum="1" />
+							</p:inputText>
+							
+							<center>
+								<p:commandButton value="Gravar" action="#{cargoController.gravar}" process="@form" update="@form :formTabelaCargos:tabelaCargos" />
+							</center>
+						
+						</p:panelGrid>
+					</p:fieldset>	
+				</h:form>
+			</center>
+			
+			<br />
+			<p:separator />
+			<br />
+					
+			<h:form id="formTabelaCargos">
+				
+				<center>
+					<p:fieldset legend="Lista de Cargos">
+						<p:dataTable id="tabelaCargos" value="#{cargoController.todosCargos}" var="varCargo" rows="10" paginator="true" reflow="true" emptyMessage="Nenhum cargo encontrado.">
+							<p:column headerText="Nome" filterBy="#{varCargo.nome}" filterMatchMode="contains">
+								<p:outputLabel value="#{varCargo.nome}" />			
+							</p:column>
+							
+							<p:column headerText="Descrição">
+								<p:outputLabel value="#{varCargo.descricao}" />			
+							</p:column>
+							
+							<p:column headerText="Salário">
+								<p:outputLabel value="#{varCargo.salario}">
+									<f:convertNumber type="currency" />
+								</p:outputLabel>			
+							</p:column>
+							
+							<p:column headerText="Atualizar">
+								<div align="center">
+									<p:commandButton style="display:inline-block; width:40px; height:30px" icon="fa fa-fw fa-edit" action="#{cargoController.carregar(varCargo)}" process="@this" update="@form :formCargo" />
+								</div>			
+							</p:column>
+							
+							<p:column headerText="Remover">
+								<div align="center">
+									<p:commandButton style="display:inline-block; width:40px; height:30px" icon="fa fa-fw fa-remove" action="#{cargoController.remover(varCargo)}" process="@form" update="@form :formCargo" />
+								</div>			
+							</p:column>
+						</p:dataTable>
+					</p:fieldset>
+				</center>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>
+
+</html>

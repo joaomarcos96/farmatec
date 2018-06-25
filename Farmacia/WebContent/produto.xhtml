@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="_template.xhtml">
+
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+			<center>
+				<h:form id="formProdutos" rendered="#{usuarioLogado.grupo.id == 1 || usuarioLogado.grupo.id == 2}">	
+					<p:messages id="mensagens" />
+					
+					<p:fieldset legend="Novo Produto" style="width:40%; margin:0px auto;">
+						<p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-widget-header">
+							<p:outputLabel value="Nome" for="nome" />
+							<p:inputText id="nome" value="#{produtoController.produto.nome}" required="true" requiredMessage="Nome Obrigatório." validatorMessage="Nome deve conter no mínimo 3 caracteres.">
+								<f:validateLength minimum="3" />
+							</p:inputText>
+			
+							<p:outputLabel value="Descrição" for="descricao" />
+							<p:inputText id="descricao" value="#{produtoController.produto.descricao}" />
+							
+							<p:outputLabel value="Valor" for="valor" />
+							<p:inputText id="valor" value="#{produtoController.produto.valor}"  required="true" requiredMessage="Valor Obrigatório." validatorMessage="Valor Inválido.">
+								<f:validateDoubleRange minimum="0.05" />
+							</p:inputText>
+							
+							<p:outputLabel value="Estoque" for="estoque" />
+							<p:inputText id="estoque" value="#{produtoController.produto.estoque}" required="true" requiredMessage="Estoque Obrigatório." validatorMessage="Estoque deve ser maior que 0.">
+								<f:validateLongRange minimum="1" />
+							</p:inputText>
+							
+							<p:outputLabel value="Estoque Mínimo" for="estoque_minimo" />
+							<p:inputText id="estoque_minimo" value="#{produtoController.produto.estoque_minimo}" required="true" requiredMessage="Estoque Mínimo Obrigatório." validatorMessage="Estoque mínimo deve ser maior que 0.">
+								<f:validateLongRange minimum="1" />
+							</p:inputText>
+			
+							<center>
+								<p:commandButton value="Gravar" action="#{produtoController.gravar}" process="@form" update="@form :formTabelaProdutos:tabelaProdutos" />
+							</center>
+							
+						</p:panelGrid>
+					</p:fieldset>
+				</h:form>
+			</center>
+		</div>
+		
+		<br />
+		<p:separator />
+		<br />
+		
+		<h:form id="formTabelaProdutos">
+			<center>
+				<p:fieldset legend="Lista de Produtos"> 
+					<p:dataTable id="tabelaProdutos" value="#{produtoController.todosProdutos}" var="produto" rows="10" paginator="true" reflow="true" emptyMessage="Nenhum produto encontrado.">
+						<p:column headerText="Nome" filterBy="#{produto.nome}" filterMatchMode="contains">
+							<p:outputLabel value="#{produto.nome}" />
+						</p:column>
+			
+						<p:column headerText="Descrição">
+							<p:outputLabel value="#{produto.descricao}" />
+						</p:column>
+						
+						<p:column headerText="Valor">
+							<p:outputLabel value="#{produto.valor}">
+								<f:convertNumber type="currency" />
+							</p:outputLabel>
+						</p:column>
+			
+						<p:column headerText="Estoque">
+							<p:outputLabel value="#{produto.estoque}" />
+						</p:column>
+						
+						<p:column headerText="Estoque Mínimo">
+							<p:outputLabel value="#{produto.estoque_minimo}" />
+						</p:column>
+			
+						<p:column headerText="Atualizar" rendered="#{usuarioLogado.grupo.id == 1 || usuarioLogado.grupo.id == 2}">
+							<div align="center">
+								<p:commandButton style="display:inline-block; width:40px; height:30px" icon="fa fa-fw fa-edit" action="#{produtoController.carregar(produto)}" process="@this" update=":formProdutos" />
+							</div>			
+						</p:column>
+						
+						<p:column headerText="Remover" rendered="#{usuarioLogado.grupo.id == 1 || usuarioLogado.grupo.id == 2}">
+							<div align="center">
+								<p:commandButton style="display:inline-block; width:40px; height:30px" icon="fa fa-fw fa-remove" action="#{produtoController.remover(produto)}" process="@form" update="@form :formTabelaProdutos:tabelaProdutos :formProdutos" />
+							</div>				
+						</p:column>
+			
+					</p:dataTable>
+				</p:fieldset>
+			</center>
+		</h:form>
+	</ui:define>
+</ui:composition>
+
+</html>

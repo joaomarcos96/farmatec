@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="_template.xhtml"> 
+
+	<ui:define name="conteudo">
+		<div class="ui-fluid">
+			<center>
+				<h:form id="formFornecedor">
+					<p:messages id="mensagens" />
+					<p:fieldset legend="Novo Fornecedor" style="width:40%; margin:0px auto;">
+						<p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-widget-header">
+							<p:outputLabel value="Nome" for="nome" />
+							<p:inputText id="nome" value="#{fornecedorController.fornecedor.nome}" required="true" requiredMessage="Nome Obrigatório." validatorMessage="Nome deve conter no mínimo 3 caracteres.">
+								<f:validateLength minimum="3" />
+							</p:inputText>
+							
+							<p:outputLabel value="CNPJ" for="cnpj" />
+							<p:inputMask id="cnpj" mask="99.999.999/9999-99" value="#{fornecedorController.fornecedor.cnpj}" required="true" requiredMessage="CNPJ Obrigatório." validatorMessage="CNPJ Inválido." />
+							
+							<p:outputLabel value="Endereço" for="endereco" />
+							<p:inputText id="endereco" value="#{fornecedorController.fornecedor.endereco}" required="true" requiredMessage="Endereço Obrigatório." validatorMessage="Endereço deve conter no mínimo 10 caracteres.">
+								<f:validateLength minimum="10" />
+							</p:inputText>
+			
+							<p:outputLabel value="Inscrição Estadual" for="inscricao_estadual" />
+							<p:inputText id="inscricao_estadual" value="#{fornecedorController.fornecedor.inscricao_estadual}" />
+							
+							<p:outputLabel value="Telefone" for="telefone" />
+							<p:inputMask id="telefone" mask="(99) 9 9999-9999" value="#{fornecedorController.fornecedor.telefone}" required="true" requiredMessage="Telefone Obrigatório." />
+							
+							<p:outputLabel value="Email" for="email" />
+							<p:inputText id="email" value="#{fornecedorController.fornecedor.email}" required="true" requiredMessage="Email Obrigatório." validatorMessage="Email inválido.">
+								<f:validateRegex pattern=".+@.+" />
+							</p:inputText>
+			
+							<center>
+								<p:commandButton value="Gravar" action="#{fornecedorController.gravar(fornecedorController.fornecedor)}" process="@form" update="@form :formTabelaFornecedores:tabelaFornecedores" />
+							</center>
+			
+						</p:panelGrid>
+					</p:fieldset>
+				</h:form>
+			</center>
+		</div>
+		
+		<br />
+		<p:separator />
+		<br />
+		
+		<h:form id="formTabelaFornecedores">
+			<center>
+				<p:fieldset legend="Lista de Fornecedores">
+					<p:dataTable id="tabelaFornecedores" value="#{fornecedorController.todosFornecedores}" var="varFornecedor" rows="10" paginator="true" reflow="true" emptyMessage="Nenhum fornecedor encontrado.">
+						<p:column headerText="Nome">
+							<p:outputLabel value="#{varFornecedor.nome}" />			
+						</p:column>
+					
+						<p:column headerText="CNPJ">
+							<p:outputLabel value="#{varFornecedor.cnpj}" />			
+						</p:column>
+						
+						<p:column headerText="Endereço">
+							<p:outputLabel value="#{varFornecedor.endereco}" />			
+						</p:column>
+						
+						<p:column headerText="Inscrição Estadual">
+							<p:outputLabel value="#{varFornecedor.inscricao_estadual}" />			
+						</p:column>
+						
+						<p:column headerText="Telefone">
+							<p:outputLabel value="#{varFornecedor.telefone}" />			
+						</p:column>
+						
+						<p:column headerText="Email">
+							<p:outputLabel value="#{varFornecedor.email}" />			
+						</p:column>
+						
+						<p:column headerText="Atualizar">
+							<div align="center">
+								<p:commandButton style="display:inline-block; width:40px; height:30px" icon="fa fa-fw fa-edit" action="#{fornecedorController.carregar(varFornecedor)}" process="@this" update=":formFornecedor" />
+							</div>			
+						</p:column>
+						
+						<p:column headerText="Remover">
+							<div align="center">
+								<p:commandButton style="display:inline-block; width:40px; height:30px" icon="fa fa-fw fa-remove" action="#{fornecedorController.remover(varFornecedor)}" process="@form" update="@form :formTabelaFornecedores:tabelaFornecedores :formFornecedor" />
+							</div>				
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</center>
+		</h:form>
+	</ui:define>
+</ui:composition>	
+
+</html>
